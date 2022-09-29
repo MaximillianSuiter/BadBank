@@ -17,16 +17,18 @@ function CreateAccount(){
 
   function handleCreate(){
     console.log(name,email,password);
+    if (!validateAll) return 
     ctx.users.push({name,email,password,balance:100});
     setShow(false);
   }    
 
-  function validateAll()
+  function validateAll(){
   if (!validate(name,     'name'))     return false;
-  if (!validate(email,    'email'))    return faase;
+  if (!validate(email,    'email'))    return false;
   if (!validate(password, 'password')) return false;
 
   return true
+  }
 
   function clearForm(){
     setName('');
