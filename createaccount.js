@@ -8,8 +8,6 @@ function CreateAccount(){
 
   function validate(field, label){
       if (!field) {
-        setStatus('Error: ' + label);
-        setTimeout(() => setStatus(''),3000);
         return false;
       }
       return true;
@@ -17,7 +15,7 @@ function CreateAccount(){
 
   function handleCreate(){
     console.log(name,email,password);
-    if (!validateAll) return 
+    if (!validateAll()) return 
     ctx.users.push({name,email,password,balance:100});
     setShow(false);
   }    
@@ -30,6 +28,7 @@ function CreateAccount(){
   return true
   }
 
+  
   function clearForm(){
     setName('');
     setEmail('');
@@ -50,12 +49,13 @@ function CreateAccount(){
               <input type="input" className="form-control" id="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.currentTarget.value)}/><br/>
               Password<br/>
               <input type="password" className="form-control" id="password" placeholder="Enter password" value={password} onChange={e => setPassword(e.currentTarget.value)}/><br/>
-              <button type="submit" className="btn btn-info" onClick={handleCreate} disabled={!validate}><h2>Create</h2></button>
+              <button type="submit" className="btn btn-info" onClick={handleCreate} disabled={!validateAll()}><p>Create</p></button>
               </>
             ):(
               <>
               <h5>Success</h5>
               <button type="submit" className="btn btn-info" onClick={clearForm}>Add another account</button>
+              <button type="submit" className="btn btn-info" onClick={clearForm}>Get your $200 Bonus</button>
               </>
             )}
     />

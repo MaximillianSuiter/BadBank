@@ -4,10 +4,8 @@ function Withdraw(){
   const [withdraw, setWithdraw] = React.useState(0);
   const ctx = React.useContext(UserContext);
 
-  // Disable submit button until withdrawal amount is entered
-  // Make pesky 0 before deposit amount disappear
-  // Message to user for overdraft
-  // Message to user for NaN
+
+
 
   function validate(field, label){
       if (!field) {
@@ -18,14 +16,14 @@ function Withdraw(){
       return true;
   }
 
-  function handleErrors(e){
+  function errorAware(e){
     if ((e.currentTarget.value) === '') {
       setStatus('');
       setWithdraw(0);
       return;
     }
-    const notrounded = Number.parseFloat(e.currentTarget.value);
-    const input = Math.round(notrounded * 100) / 100;
+
+    const input = Math.round(e.currentTarget.value * 100) / 100;
     if (Number.isNaN(input)) {
       setStatus('Transaction failure: Reponse must be a number');
       setWithdraw(0);
@@ -37,18 +35,18 @@ function Withdraw(){
       setWithdraw(0);
     }
     else {
-      console.log('setting withdrawal to ' + input);
+      console.log('set withdrawal to ' + input);
       setWithdraw(input);
       setStatus('');
     }
   }
 
-  function handleWithdraw(){
-    console.log('current balance is: ' + ctx.activeUser.balance);
-    console.log('withdrawal amount: ' + withdraw);
-    if (!validate(withdraw, 'No withdrawal amount has been entered')) return;
+  function withdrawalInput(){
+    console.log('Your balance is: ' + ctx.activeUser.balance);
+    console.log('Withdrawal amount: ' + withdraw);
+    if (!validate(withdraw, 'Please enter a valid amount to withdraw')) return;
     ctx.activeUser.balance = ctx.activeUser.balance - withdraw;
-    console.log('current balance is: ' + ctx.activeUser.balance);
+    console.log('Your balance is: ' + ctx.activeUser.balance);
     setShow(false);
   }
 
@@ -60,21 +58,28 @@ function Withdraw(){
   return (
     <Card
       bgcolor="warning"
-      header="Withdraw"
+      header="Make a Withdrawal"
       status={status}
       body={show ? (
-              <>
-              <div><p>Your Balance: <strong>${ctx.activeUser.balance.toFixed(2)}</strong></p></div><br/>
-              <h1>Withdrawal Amount</h1>
-              <input className="form-control" id="withdraw" placeholder="0.00" onChange={handleErrors} /><br/>
-              <button type="submit" className="btn btn-info" onClick={handleWithdraw} disabled={withdraw === 0.00}><h2>Withdraw</h2></button>
-              </>
-            ):(
-              <>
-              <h5>Success</h5>
-              <button type="submit" className="btn btn-info" onClick={clearForm}><p>Make another withdrawal</p></button>
-              </>
-            )}
+        <>
+        <div><p>Your Balance: <strong>${ctx.activeUser.balance.toFixed(2)}</strong></p></div>
+        <h1>Withdrawal Amount</h1>
+        <input className="form-control" id="deposit" placeholder="0.00" onChange={errorAware} /><br/>
+
+        <button type="submit" className="btn btn-info" onClick={withdrawalInput} disabled={withdraw === 0.00}><p>Make Withdrawal</p></button>
+        </>
+        ):(
+        <>
+        <h2>Your deposit was successful</h2>
+        <button type="submit" className="btn btn-info" onClick={clearForm}><p>Make An Additional Withdrwal?</p></button>
+        </>
+        )}
     />
   )
 }
+
+
+
+
+
+

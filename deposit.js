@@ -5,31 +5,41 @@ function Deposit(){
   const ctx = React.useContext(UserContext);
 
 
+
+  
   function validate(field, label){
       if (!field) {
         setStatus('Error: ' + label);
         setTimeout(() => setStatus(''),3000);
         return false;
       }
-      const notrounded = Number.parseInt(field);
-      const input = Math.round(notrounded * 100) / 100;
-        if (Number.isNaN(input)) {
-        setStatus('Transaction failure: Reponse must be a number');
-      } else if (input < 0) {
-        setStatus('Transaction failure: Response must be a positive number');
-      }
+
       return true;
   }
 
-  function onChange(input){
+  function errorAware(e){
+    if ((e.currentTarget.value) === '') {
+      setStatus('');
+      return;
+    }
+
+    const input = Math.round(e.currentTarget.value * 100) / 100;
+    if (Number.isNaN(input)) {
+      setStatus('Transaction failure: Reponse must be a number');
+    } else if (input < 0) {
+      setStatus('Transaction failure: Response must be a positive number');
+    } else if (input===0){
+      setStatus('Transaction failure: Response can not be 0');
+    } else {
       setDeposit(input);
       setStatus('');
     }
   }
 
-  function handleDeposit(){
+
+  function depositInput(){
     console.log(deposit);
-    if (!validate(deposit, 'Transaction failure: No deposit amount entered')) return;
+    if (!validate(deposit, 'You must enter a valid deposit amount')) return;
     ctx.activeUser.balance += deposit;
     setShow(false);
   }
@@ -42,25 +52,26 @@ function Deposit(){
   return (
     <Card
       bgcolor="success"
-      header="Deposit"
+      header="Make a Deposit"
       status={status}
       body={show ? (
               <>
-              <div><p>Your Balance: <strong>${ctx.activeUser.balance.toFixed(2)}</strong></p></div><br/>
-             <h1>Deposit Amount</h1>
-              <input className="form-control" id="deposit" placeholder="0.00" onChange={onChange} /><br/>
+              <div><p>Your Balance: <strong>${ctx.activeUser.balance.toFixed(2)}</strong></p></div>
+              <h1>Deposit Amount</h1>
+              <input className="form-control" id="deposit" placeholder="0.00" onChange={errorAware} /><br/>
              
-              <div><button type="submit" className="btn btn-info" onClick={handleDeposit} disabled={deposit === 0.00}><h2>Make Deposit</h2></button></div>
+              <button type="submit" className="btn btn-info" onClick={depositInput} disabled={deposit === 0}><p>Make Deposit</p></button>
               </>
             ):(
               <>
-              <h5>Success</h5>
-              <button type="submit" className="btn btn-info" onClick={clearForm}><p>Make another deposit</p></button>
-
-          
+              <h2>Your deposit was successful</h2>
+              <button type="submit" className="btn btn-info" onClick={clearForm}><p>Make an additional deposit?</p></button>
               </>
-              
             )}
     />
   )
 }
+
+
+
+

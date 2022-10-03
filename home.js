@@ -2,10 +2,10 @@ function Home(){
   return (
     <Card
       bgcolor="primary"
-      txtcolor="black"
-      header="BadBank Landing Module"
-      title="Welcome to the bank"
-      text="You can move around using the navigation bar."
+      txtcolor="white"
+      header="BadBank"
+      title="Welcome to financial bliss"
+      text="Open an account today to receive a $200 bonus! Offer ends soon. "
       body={(<img src="bank.png" className="img-fluid" alt="Responsive image"/>)}
     />    
   );  
